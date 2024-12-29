@@ -7,7 +7,7 @@ import com.wychmod.mysql.MysqlServer;
  * @author: wychmod
  * @date: 2024-12-29
  */
-public class MySQLStarter {
+public class MySQLServerStarter {
 
     public static void main(String[] args) throws Exception {
         MysqlServer mysqlServer = new MysqlServer(8888);
