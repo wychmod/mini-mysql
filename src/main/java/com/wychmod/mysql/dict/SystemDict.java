@@ -23,6 +23,9 @@ public class SystemDict implements Serializable {
 
     private final static String SYSTEM_DICT_FILE = "ibdata";
 
+    private SystemDict() {
+    }
+
     @Getter
     private static SystemDict instance = new SystemDict();
 
@@ -30,6 +33,22 @@ public class SystemDict implements Serializable {
     public HashMap<Integer, DictTable> idTables = new HashMap<>();
     public HashMap<Integer, DictTable> spaceIdTables = new HashMap<>();
     public HashMap<Integer, List<DictIndex>> tableIdIndexes = new HashMap<>();
+
+    public int maxTableId;
+    public int maxIndexId;
+    public int maxSpaceId;
+
+    public int addMaxTableId() {
+        return ++maxTableId;
+    }
+
+    public int addMaxIndexId() {
+        return ++maxIndexId;
+    }
+
+    public int addMaxSpaceId() {
+        return ++maxSpaceId;
+    }
 
     /**
      * 序列化系统字典对象
