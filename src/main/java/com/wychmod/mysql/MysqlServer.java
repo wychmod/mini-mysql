@@ -1,5 +1,6 @@
 package com.wychmod.mysql;
 
+import com.wychmod.mysql.dict.SystemDict;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -21,6 +22,9 @@ public class MysqlServer {
     }
 
     public void run() throws Exception {
+
+        SystemDict.getInstance().deserialize();
+
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
         try {

@@ -138,4 +138,20 @@ public class MysqlClient {
         }
 
     }
+
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
+        MysqlClient client = new MysqlClient("localhost", 8888);
+
+        String createSql = """
+                CREATE TABLE t1 (
+                  id int,
+                  a varchar(10),
+                  b varchar(10),
+                  c varchar(10),
+                  d int,
+                  PRIMARY KEY (id)
+                );
+                """;
+        client.sendMessage(createSql);
+    }
 }
