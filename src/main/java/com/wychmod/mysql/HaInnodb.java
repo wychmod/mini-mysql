@@ -1,5 +1,7 @@
 package com.wychmod.mysql;
 
+import com.wychmod.mysql.core.FspHdrPage;
+import com.wychmod.mysql.core.PageUtil;
 import com.wychmod.mysql.core.SpaceUtil;
 import com.wychmod.mysql.dict.DictColumn;
 import com.wychmod.mysql.dict.DictTable;
@@ -59,6 +61,12 @@ public class HaInnodb {
         SystemDict.getInstance().getNameTables().put(tableName, dictTable);
         SystemDict.getInstance().getIdTables().put(tableId, dictTable);
         SystemDict.getInstance().getSpaceIdTables().put(spaceId, dictTable);
+
+        FspHdrPage fspHdrPage = SpaceUtil.getFspHdrPage(spaceId);
+        fspHdrPage.init_file_header(spaceId, 0);
+        fspHdrPage.fil_page_set_type(8);  // 源码中8表示FSP_HDR
+        fspHdrPage.set_fsp_size(1);       // 当前表空间中只有1页
+        PageUtil.flushPage(fspHdrPage);   // 记得把页的修改持久化到ibd文件中去
 
         // 把SystemDict对象持久化
         SystemDict.getInstance().serialize();
