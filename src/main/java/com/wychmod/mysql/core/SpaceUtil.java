@@ -77,4 +77,18 @@ public class SpaceUtil {
         DictTable dictTable = SystemDict.getInstance().getSpaceIdTables().get(spaceId);
         return Paths.get(dictTable.getPath());
     }
+
+    /**
+     * 获取指定表空间的下一个空闲页号
+     *
+     * @param spaceId 表空间id
+     * @return 页号
+     */
+    public static int getNextPageNo(int spaceId) {
+        FspHdrPage hdrPage = getFspHdrPage(spaceId);
+        int pageNo = hdrPage.get_fsp_size();
+        hdrPage.set_fsp_size(pageNo + 1);
+        PageUtil.flushPage(hdrPage);  // 修改了FspHdrPage，直接持久化
+        return pageNo;
+    }
 }

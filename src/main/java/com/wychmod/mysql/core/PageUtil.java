@@ -15,8 +15,39 @@ public class PageUtil {
 
     public static final int PAGE_SIZE = 16 * 1024;  // 16KB
 
+    /**
+     * 创建一个新的页面
+     *
+     * 此方法负责在指定的表空间内分配并初始化一个新的页面它首先获取下一个可用的页面编号，
+     * 然后准备一个ByteBuffer用于页面数据的存储，接着设置页面的元数据，包括表空间ID、页面编号、页面类型，
+     * 并初始化文件头和页面头最后，将页面写入到磁盘并返回新的页面编号
+     *
+     * @param spaceId 表空间的唯一标识符，用于确定页面属于哪个表空间
+     * @return 返回新创建页面的编号
+     */
     public static int createPage(int spaceId) {
-        return 0;
+        // 获取下一个可用的页面编号
+        int nextPageNo = SpaceUtil.getNextPageNo(spaceId);
+
+        // 16KB内存
+        ByteBuffer byteBuffer = ByteBuffer.allocate(PAGE_SIZE);
+        IndexPage page = new IndexPage();
+        page.setPageByteBuffer(byteBuffer);
+
+        // 设置页面的表空间ID
+        page.fil_page_set_space_id(spaceId);
+        // 设置页面的偏移量（即页面编号）
+        page.fil_page_set_page_offset(nextPageNo);
+        // 设置页面类型为INDEX页，源码中17855表示INDEX页，暂时还不知道怎么要用这个数字
+        page.fil_page_set_type(17855);
+        // 初始化文件头 每个页都有的文件头
+        page.init_file_header(spaceId, nextPageNo);
+
+        // 初始化页面头 index页自己的文件头
+        page.init_page_header();
+
+        // 将页面写入到磁盘并返回新的页面编号
+        return flushPage(page);
     }
 
     /**
